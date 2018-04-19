@@ -7,17 +7,22 @@
  * a string of characters for the password
  * another NULL character to signify the password has ended. 
  */
-
+// This is the list of the characters that will be chosen via the wifi SSID/password pickers
 #define characterSelection = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+,.<>/?"
+HTTPClient http;
 
 void initWifi() {
-  if(EEPROM.read(0) == 0) {
+  if(EEPROM.read(0) == 0) { // begins WiFi picker if the "set"
     wifiPicker();
   } 
-  WiFi.begin(wifiSSID().c_str(), wifiPassword().c_str());
-  while(WiFi.status() != WL_CONNECTED) {
-    wifiConnecting();
+  Serial.println("hi");
+  WiFiMulti.addAP(wifiSSID().c_str(), wifiPassword().c_str());
+  while(!(WiFiMulti.run() == WL_CONNECTED) && millis() < 5000) {
+    Serial.println("hi");
+    tft.setCursor(20, 100);
+    tft.println("Connecting to WiFi");
   }
+
 }
 
 void wifiConnecting() {
@@ -56,6 +61,7 @@ String pickSSID() {
 }
 
 String wifiSSID() {
+  return "HackBerry";
   int startingPos = SSIDStartingPos();
   String returner = ""; //Initialize the return string
   for(int i = startingPos; i < EEPROM_SIZE; i++) {
@@ -68,6 +74,7 @@ String wifiSSID() {
 }
 
 String wifiPassword() {
+  return "CreativeTechnologies!";
   int startingPos = passwordStartingPos();
   String returner = ""; //Initialize the return string
   for(int i = startingPos; i < EEPROM_SIZE; i++) {

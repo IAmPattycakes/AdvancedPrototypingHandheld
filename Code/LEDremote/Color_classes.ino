@@ -1,13 +1,20 @@
+/*
+ * This file is dedicated to the specific HSV and RGB color classes, as well
+ * as the functions that convert between them. These are majorly used in the
+ * colorPicker file. Code adapted from David H. on StackOverflow. 
+ * https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
+ */
+
 typedef struct {
-    double r;       // a fraction between 0 and 1
-    double g;       // a fraction between 0 and 1
-    double b;       // a fraction between 0 and 1
+    float r;       // a fraction between 0 and 1
+    float g;       // a fraction between 0 and 1
+    float b;       // a fraction between 0 and 1
 } rgb;
 
 typedef struct {
-    double h;       // angle in degrees
-    double s;       // a fraction between 0 and 1
-    double v;       // a fraction between 0 and 1
+    float h;       // angle in degrees
+    float s;       // a fraction between 0 and 1
+    float v;       // a fraction between 0 and 1
 } hsv;
 
 static hsv   rgb2hsv(rgb in);
@@ -16,7 +23,7 @@ static rgb   hsv2rgb(hsv in);
 hsv rgb2hsv(rgb in)
 {
     hsv         out;
-    double      min, max, delta;
+    float      min, max, delta;
 
     min = in.r < in.g ? in.r : in.g;
     min = min  < in.b ? min  : in.b;
@@ -57,24 +64,16 @@ hsv rgb2hsv(rgb in)
     return out;
 }
 
-uint16_t hsvtorgb(uint8_t r, uint8_t g, uint8_t b) {
-  uint8_t hh, p, q, t, ff, i;
-  uint16_t output;
-  hh = h / 42.5;
-  i = hh;
-  ff = hh - i;
-}
-
 rgb hsv2rgb(hsv in)
 {
-    double      hh, p, q, t, ff;
-    long        i;
+    float      hh, p, q, t, ff;
+    uint8_t        i;
     rgb         out;
 
     hh = in.h;
     if(hh >= 360.0) hh = 0.0;
     hh /= 60.0;
-    i = (long)hh;
+    i = hh;
     ff = hh - i;
     p = in.v * (1.0 - in.s);
     q = in.v * (1.0 - (in.s * ff));
